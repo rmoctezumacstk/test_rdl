@@ -51,7 +51,7 @@ module AdminContenido {
        	db_map (table: "T_Opcion")
               	
         reference Para : Pregunta [1..1]{
-       		glossary (name: "Descripción pregunta", description: "Contiene las descripciones de las preguntas")
+       		glossary (name: "Descripción de pregunta", description: "Contiene las descripciones de las preguntas")
       		constraints (unique: true, required: true)
        		widget (type:Autocomplete , exposed_filter: true, display_result: true)
        		//data (domain: "Lorem::longParagraph")
