@@ -1,0 +1,792 @@
+module AdminContenido {
+//Administrador de Contenido.
+// ALCC2. 14 Diciembre 2018.
+
+	enum TipoSubsistema {
+		SS1: "DGB"
+		SS2: "DGIRE"
+		SS3: "DGETI"
+		SS4: "UDG"
+		SS5: "UNITEC"
+	}
+	
+	enum TipoEstatus {
+		AB: "Abierto"
+		CE:  "Cerrado"
+		CA: "Cancelado"
+	}
+
+	enum Genero {
+		FEM: "Femenino"
+		MAS: "Masculino"
+	}
+
+	enum TipoArea {
+		FM: "Físico Matemáticas"
+		CSA: "Ciencias Sociales y Administrativas"
+		CMB: "Ciencias Medico Biológicas"
+	}
+	
+	enum TipoNivel {
+		B: "Bachillerato"
+		U: "Universitario"
+	}
+	
+	enum 	TipoRecurso {
+		VL: "Video en línea"
+		AL: "Audio en línea"
+		ADZ: "Archivo descargable ZIP"
+		ADP: "Archivo descargable PDF"
+		ADD: "Archivo descargable DOC"
+		ADX: "Archivo descargable XLS"
+		ADT: "Archivo descargable PPT"
+		IA: "Información del autor"
+	}
+			
+	
+	
+	entity Opcion {
+		scaffold (add: true, edit: true, delete: true, search: Complex )
+     	glossary ( name: "Opción", description: "Catálogo de opciones")
+       	db_map (table: "T_Opcion")
+              	
+        reference Para : Pregunta [1..1]{
+       		glossary (name: "Descripción pregunta", description: "Contiene las descripciones de las preguntas")
+      		constraints (unique: true, required: true)
+       		widget (type:Autocomplete , exposed_filter: true, display_result: true)
+       		//data (domain: "Lorem::longParagraph")
+       		db_map (field: "fkPara", pk: false)
+       		}
+	  	
+	  	
+	   field DescipcionOpcion: Text {
+       		glossary (name: "Descripcion opción", description: "Descripciones de las opciones")
+      		constraints (unique: false, required: true)
+       		widget (exposed_filter: true, display_result: true)
+       		data (domain: "App::name")
+       		db_map (field: "fcDescripcionOpcion", pk: false)
+       		business_rule (code: "RN01", description: "Sumar Puntos")
+       		}
+       	
+		field Puntos: Integer {
+       		glossary (name: "Puntos", description: "Puntos de las opciones")
+      		constraints (unique: false, required: true)
+       		widget (exposed_filter: true, display_result: true)
+       		data (domain: "Lorem::code5")
+       		db_map (field: "fcPuntos", pk: false)
+       		business_rule (code: "RN02", description: "Asigna valor a cada DescripcionOpcion")
+       	}  	
+	  	
+	  	
+      	def toString {
+       		return DescipcionOpcion
+       }
+	}  
+	  	
+	 	  	
+	 entity Pregunta {
+		scaffold (add: true, edit: false, delete: true, search: Complex )
+       	glossary ( name: "Pregunta", description: "Catálogo de preguntas")
+       	 db_map (table: "T_Pregunta")
+    
+       	
+        reference Peternece : Examen [1..1]{
+       		glossary (name: "Nombre examen", description: "Nombre del exámen")
+      		constraints (unique: true, required: true)
+       		widget (exposed_filter: true, display_result: true)
+       		//data (domain: "App::name")
+       		db_map (field: "fkPeternece", pk: false)
+       	  		
+	  	}
+	  	
+	  	field DescipcionPregunta: Text {
+       		glossary (name: "Descripción pregunta", description: "Contiene las descripciones de las preguntas")
+      		constraints (unique: false, required: true)
+       		widget (exposed_filter: true, display_result: true)
+       		data (domain: "Lorem::longParagraph")
+       		db_map (field: "fcDescipcionPregunta", pk: false)
+       	
+       	}
+	  	def toString {
+       		return DescipcionPregunta
+       }
+	}  
+	  
+	  	entity Examen {
+		scaffold (add: true, edit: true, delete: true, search: Complex)
+       	glossary ( name: "Examen", description: "Nombre del examen")
+       	db_map (table: "T_Examen")
+       
+       	     	       	
+        reference  Corresponde: Publicacion [1..1]{
+       		glossary (name: "Publicación", description: "Publicaciones de las obras")
+      		constraints (unique: false, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "Lorem::longParagraph")	
+       		db_map (field: "fkCorresponde", pk: false) 
+		 } 	
+		 
+		field NombreExamen: Text {
+       		glossary (name: "Nombre examen", description: "Nombre del examen")
+      		constraints (unique: false, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "App::name")
+       		db_map (field: "fcNombreExamen", pk: false)
+	    }
+	    	
+	  	def toString {
+       		return NombreExamen
+       }
+	}  
+	  
+     
+	  
+	  entity Publicacion { 
+		scaffold (add: true, edit: false, delete: true, search: Complex)
+       	glossary ( name: "Publicación", description: "Publicaciones de las obras")
+       	db_map (table: "T_Publicacion")
+       
+       	       	
+        field NombreObra: LongText {
+       		glossary (name: "Nombre obra", description: "Nombre de la obra")
+      		constraints (unique: false, required: true, min_length: 100, max_length: 200)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "Lorem::longParagraph")
+      }
+       	
+       	    reference Es: TipoSubsistema [1..1] {
+       		glossary (name: "Subsistema", description: "Tipo de subistema")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		db_map (field: "fkEs", pk: false) 
+       		
+       	}
+       	
+      	    reference Tiene: TipoNivel [1..1] {
+       		glossary (name: "Nivel", description: "Tipo de nivel")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: false)
+       		db_map (field: "fkTiene", pk: false) 
+       	}
+       	 	
+       	    reference Tipo: TipoArea [1..1] {
+       		glossary (name: "Area", description: "Tipo área")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: false)
+       		db_map (field: "fkTipo", pk: false) 
+       	}
+       	
+        field FechaPublicacion: Date {
+       		glossary (name: "Fecha Publicación", description: "Fecha en que se publico")
+      		constraints (unique: false, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		db_map (field: "fcFechaPublicacion", pk: false)
+        }
+       	      	       
+        field Autor: LongText {
+       		glossary (name: "Autor", description: "Nombre del autor")
+      		constraints (unique: false, required: true, min_length: 100, max_length: 200)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "App::name")
+       		db_map (field: "fcAutor", pk: false)
+       	}
+       	  
+       	    reference Familiariza: Grupo [1..1] {
+       	    glossary (name: "Nombre grupo", description: "Nombre del grupo")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "App::name")
+       		db_map (field: "fkFamiliariza", pk: false) 
+       	  }
+       	    
+            reference Comunicado: Programa [1..1]opposite-of Programa.ComunicadoPor{
+       		glossary (name: "Clave programa", description: "Clave que identifica al programa")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: false, display_result: false)
+       		data (domain: "Lorem::code5")
+       		db_map (field: "fkComunicado", pk: false) 
+       	  }	
+       	     	     	
+       	def toString {
+       		return NombreObra	
+	   }
+	   
+	 }
+           		
+       	entity Programa {
+		scaffold (add: true, edit: true, delete: false, search: Complex )
+       	glossary ( name: "Programa", description: "Catálogo de programas")
+       	db_map (table: "T_Programa")  
+       	
+       	 	reference Concierne: Estudiante [0..*]opposite-of Estudiante.ConciernePor{
+       	 	glossary (name: "Matrícula", description: "Matrícula del estudiante")
+      	 	constraints (unique: true, required: false)
+       	 	widget ( exposed_filter: false, display_result: false)
+       	 	data (domain: "App::name")
+       	 	db_map (field: "fkConcierne", pk: false)
+       	  	}	
+       	    	
+       	 	reference ComunicadoPor: Publicacion [0..*]opposite-of Publicacion.Comunicado{
+			glossary (name: "Nombre obra", description: "Nombre de la obra")
+      		constraints (unique: false, required: true)
+       		widget ( exposed_filter: false, display_result: false)
+       		data (domain: "Lorem::longParagraph")
+       	 	db_map (field: "fkComunicadoPor", pk: false) 
+       	 
+			}
+     	  	    	      	       
+        field Clave: Integer {
+       	glossary (name: "Clave programa", description: "Clave del programa")
+      	constraints (unique: true, required: true)
+       	widget ( exposed_filter: true, display_result: true)
+       	//data (domain: "Lorem::code5")
+       	db_map (field: "fcClave", pk: true)
+       	
+       	}
+       	           	    
+       	 field 	NombrePrograma: LongText {
+       	 glossary (name: "Nombre programa", description: "Nombre del programa")
+       	 constraints (unique: false, required: true, min_length: 100, max_length: 200)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::longParagraph")
+       	 db_map (field: "fcNombrePrograma", pk: false)
+       	} 
+       	     
+       	  reference Tipo: TipoEstatus [1..1] {
+       		glossary (name: "Estatus", description: "Tipo de estatus")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		db_map (field: "fkTipo", pk: false) 
+       	}   
+       	        	            	      	      	
+       	def toString {
+       		return NombrePrograma
+	   }	   
+	  	    }
+	  	    
+		 
+        entity Grupo {
+		scaffold (add: true, edit: true, delete: false, search: Complex)
+       	glossary ( name: "Grupo", description: "Catálogo de grupos")
+       	db_map (table: "T_Grupo")      	
+       		      	       
+        field NombreGrupo: Text {
+       		glossary (name: "Nombre del grupo", description: "Nombre del grupo")
+      		constraints (unique: false, required: true, min_length: 20, max_length: 25)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "App::name")
+       		db_map (field: "fcNombreGrupo", pk: false)
+       	}
+       	           	    
+       	 field 	DescripcionGrupo: Text {
+       	 glossary (name: "Descripción grupo", description: "Descripción del grupo")
+      	 constraints (unique: false, required: true, min_length: 80, max_length: 100)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::longParagraph")
+       	 db_map (field: "fcDescripcionGrupo", pk: false)
+       	 
+       	} 
+       	     
+       	  reference Tipo: TipoEstatus [1..1] {
+       		glossary (name: "Estatus", description: "Tipo de estatus")
+      		constraints (unique: true,required: true)
+       		widget ( exposed_filter: true, display_result: false)
+       		db_map (field: "fkTipo", pk: false) 
+       	}   
+       	        	            	      	      	
+       	def toString {
+       		return NombreGrupo
+	   }   
+	  }
+
+  		entity Recurso {
+		scaffold (add: true, edit: true, delete: true, search: Complex)
+       	glossary ( name: "Recurso", description: "Catálogo de recursos")
+       	db_map (table: "T_Recurso")
+       	     	
+        reference Relaciona : Unidad [1..1]{
+       		glossary (name: "Nombre unidades", description: "Nombre de la unidad")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: false, display_result: true)
+       		data (domain: "App::name")
+       		db_map (field: "fkRelaciona", pk: false) 
+       		
+       		 }
+      
+        field 	DescripcionRecurso: LongText{
+       	 glossary (name: "Descripción recurso", description: "Descripciones del recurso")
+      	 constraints (unique:false, required: true, min_length: 100, max_length: 200)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::longParagraph")
+       	 db_map (field: "fcDescripcionRecurso", pk: false)
+       	} 
+       	     		      	
+       	 field 	Ruta: LongText {
+       	 glossary (name: " Ruta", description: "Archivo que contiene la imagen de la ruta")
+      	 constraints (unique: false, required: true, min_length: 100, max_length: 200)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::longParagraph")
+       	 db_map (field: "fcRuta", pk: false)  
+       	 business_rule (code: "RN03", description: "Multiplicar Tamano por valor 1")  
+       	 
+       	 	 
+       	} 
+     	  	
+       	    reference Clasifican: TipoRecurso [1..1] {
+       		glossary (name: "Recurso", description: "Tipo de recurso")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: false)
+       		db_map (field: "fkClasifican", pk: false) 
+       	}  
+       	   	       	
+       	 field 	Tamano: Integer {
+       	 glossary (name: "Tamaño", description: "Tamaño del recurso")
+      	 constraints (unique: false, required: false)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 //data (domain: "Lorem::code5")
+       	 db_map (field: "fcTamano", pk: false)  
+       	 } 
+       	            	       	            	      	      	
+       	def toString {
+       		return DescripcionRecurso
+	   }	   
+	  }   
+       	 
+   	  	entity Unidad {
+		scaffold (add: true, edit: false, delete: true, search: Complex)
+       	glossary ( name: "Unidad", description: "Nombre de la unidad")
+       	db_map (table: "T_Unidad")
+      	     	       	
+        reference  Compete: Publicacion [1..1]{
+       		glossary (name: "Nombre obra", description: "Nombre de la obra")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: false, display_result: false)
+       		data (domain: "Lorem::longParagraph")	
+       		db_map (field: "fkCompete", pk: false)  
+		 } 	
+		 
+		field NombreUnidad: LongText {
+       		glossary (name: "Nombre unidad", description: "Nombre de la unidad")
+      		constraints (unique: false, required: true,  min_length: 150, max_length: 200)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "App::name")
+       		db_map (field: "fcNombreUnidad", pk: false)  
+	    }
+	    	
+	  	def toString {
+       		return NombreUnidad
+       		}
+       		}
+	
+	
+	   entity Certificacion {
+		scaffold (add: false, edit: true, delete: true, search: Complex )
+        glossary (name: "Certificación", description: "Certificaciones de los profesores")
+        db_map (table: "T_Certificacion")
+            	
+        reference  Tiene: Publicacion [1..1]{
+       		glossary (name: "Nombre obra", description: "Nombre de la obra")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		data (domain: "Lorem::longParagraph")	
+       		db_map (field: "fkCompete", pk: false)  		
+     	 }   
+      
+          reference  Son: Profesor [1..1]{
+       		 glossary (name: "Número del empleado", description: "Número de empleado del profesor")
+      		 constraints (unique: true, required: true)
+       	 	 widget ( exposed_filter: true, display_result: true)
+       		 data (domain: "App::name")   
+       		 db_map (field: "fkSon", pk: false) 
+     	 }   
+      
+      
+         field IdCertificacion: Integer {
+       	 glossary (name: "Identificador certificación", description: "Identificador de certificaciones")
+      	 constraints (unique: true, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 //data (domain: "Lorem::code5")
+       	 db_map (field: "fcIdCertificacion", pk: false)  
+       	 
+       	}    
+     
+       field FechaCertificacion: Date {
+       	 glossary (name: "Fecha certificación", description: "Fecha de certificación")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 db_map (field: "fcFechaCertificacion", pk: false) 
+      	}    
+       	           
+         def toString {
+       		return IdCertificacion
+       		}
+       		}
+       		
+       		
+        entity Profesor {
+   	   	scaffold (add: false, edit: false, delete: true, search: Complex )
+       	glossary ( name: "Profesor", description: "Catálogo de profesores")
+       	db_map (table: "T_Profesor")     	
+      
+         reference Imparte : Evento [0..*] opposite-of Evento.ImpartidoPor{
+       	 glossary (name: "Clave Evento", description: "Clave del evento")
+      	 constraints (unique: true, required: true)
+       	 widget ( exposed_filter: false, display_result: true)
+       	 //data (domain: "App::name")
+       	 db_map (field: "fkImparten", pk: false)
+      } 	
+       	    
+         field NoEmpleado: Integer {
+       	 glossary (name: "Número del empleado", description: "Número de empleado del profesor")
+      	 constraints (unique: true, required: true )
+       	 widget ( exposed_filter: true, display_result: true)
+       	 //data (domain: "App::name")
+       	 db_map (field: "fcNoEmpleado", pk: true) 
+       	} 
+       	  
+       	 field NombreProfesor: Currency {
+       	 glossary (name: "Nombre profesor", description: "Nombre del profesor")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result:true)
+       	 data (domain: "App::name")
+       	 db_map (field: "fcNombreProfesor", pk: false) 
+       	} 
+       	 
+       	 field ApellidoPaterno: Date{
+       	 glossary (name: "Apellido paterno", description: "Apellido paterno del profesor")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Name::firstName")
+       	 db_map (field: "fcApellidoPaterno", pk: false)
+       	 	 
+       	}  
+       	  
+       	 field RFC: Decimal {
+       	 glossary (name: "RFC", description: "RFC del profesor")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "App::name")
+       	 db_map (field: "fcRFC", pk: false)
+       	 
+       	}  
+       	 
+       	 field CorreoPro: Email {
+       	 glossary (name: "Correo", description: "Correo electrónico del profesor")
+      	 constraints (unique: false, required: false)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 //data (domain: "Lorem::paragraph")
+       	 db_map (field: "fcCorreoPro", pk: false)
+       	}  
+       	 
+       	 field Telefono: File {
+       	 glossary (name: "Teléfono", description: "Telefóno del profesor")
+      	 constraints (unique: false, required: false)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Phone::phoneNumber")
+       	 db_map (field: "fcTelefono", pk: false)
+       	}  
+       	 
+          
+        def toString {
+       		return NombreProfesor
+		
+	   }		
+   	}	     		
+   	       		  
+      	  		
+       	entity Estudiante{
+		scaffold (add: false, edit: false, delete: false, search: Complex )
+        glossary (name: "Estudiante", description: "Control de estudiantes")
+        db_map (table: "T_Estudiante") 
+        
+        reference ConciernePor: Programa [0..1]opposite-of Programa.Concierne{
+       	glossary (name: "Clave programa", description: "Clave del programa")
+      	constraints (unique: true, required: true)
+       	widget ( exposed_filter: false, display_result: false)
+       	data (domain: "Lorem::code5")
+       	db_map (field: "fkConciernePor", pk: false) 
+       	  }	
+            
+        reference ConfirmadoPor: Registro [0..*]opposite-of Registro.Confirmado {
+        glossary (name: "Número de confirmación", description: "Número de confirmación del registro")
+      	constraints (unique: true, required: true)
+       	widget ( exposed_filter: true, display_result: true)
+       	data (domain: "Lorem::code5")
+       	db_map (field: "fkConfirmadoPor", pk: false)	
+       	}    
+      
+		 field Matricula: Text {
+       	 glossary (name: "Matricula", description: "Matricula del estudiante")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::paragraph")
+       	 db_map (field: "fcMatricula", pk: true)
+       	  }
+     	
+       	 field 	NombreEstudiante: Text {
+       	 glossary (name: "Nombre estudiante", description: "Nombre completo del estudiante")
+      	 constraints (unique: false, required: true, min_length: 40, max_length: 50)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "App::name")
+       	 db_map (field: "fcNombreEstudiante", pk: false)
+       	 
+       	} 
+           	
+       	 field 	ApellidoPaterno: Text {
+       	 glossary (name: "Apellido paterno", description: "Apellido paterno del estudiante")
+      	 constraints (unique: false, required: true, min_length: 40, max_length: 50)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Name::firstName")
+       	 db_map (field: "fcApellidoPaterno", pk: false)       	 
+       	} 
+       	
+       	 field 	FechaNacimiento: Date {
+       	 glossary (name: "Fecha nacimiento", description: "Fecha de nacimiento del estudiante")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 db_map (field: "fcFechaNacimiento", pk: false) 
+       	 }
+       	 
+       	 reference Gen: Genero[1..1] {
+       		glossary (name: "Genero", description: "Tipo de genero")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		db_map (field: "fkEs", pk: false) 
+         }
+         
+         reference Tiene: TipoNivel [1..1] {
+       		glossary (name: "Nivel", description: "Tipo de nivel")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: false)
+       		db_map (field: "fkTiene", pk: false) 
+       	}
+       	 	
+       	    reference Tipo: TipoArea [1..1] {
+       		glossary (name: "Especialidad", description: "Especialidad")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: false)
+       		db_map (field: "fkTipo", pk: false) 
+       	}
+         
+      	
+       	 field 	CorreoEst: Email {
+       	 glossary (name: "Correo electrónico", description: "Correo electrónico del estudiante")
+      	 constraints (unique: false, required: false)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 //data (domain: "App::name")
+       	 db_map (field: "fcCorreoEst", pk: false) 
+       	} 
+       	
+       	 field 	Telefono: Text {
+       	 glossary (name: "Teléfono", description: "Teléfono del estudiante")
+      	 constraints (unique: false, required: false, min_length: 10, max_length: 20)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Phone::phoneNumber")
+       	 db_map (field: "fcTelefono", pk: false) 
+       	} 
+         	
+       	   	def toString {
+       		return NombreEstudiante
+       	}
+	   }
+       	       
+	   	   
+	    entity Registro{
+	    scaffold (add: false, edit: false, delete: false )
+		glossary (name: "Registro", description: "Control de registros")
+        db_map (table: "T_Registro")
+        
+       	reference  Confirmado: Estudiante [1..1]opposite-of Estudiante.ConfirmadoPor{
+       	 glossary (name: "Matricula", description: "Matricula del estudiante")
+      	 constraints (unique: true, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain:  "Lorem::code5")
+       	 db_map (field: "fkConfirmado", pk: false) 
+       	  }
+    
+         reference  InscritoPor: Evento [1..1]opposite-of Evento.Inscrito{
+       	 glossary (name: "Clave evento", description: "Clave del evento")
+      	 constraints (unique: true, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain:  "Lorem::code5")
+       	 db_map (field: "fkInscritoPor", pk: false)
+      } 
+  
+         field NumConfirmacion: Integer {
+       	 glossary (name: "Número de confirmación", description: "Número de confirmación del registro")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 //data (domain: "Lorem::code5")
+       	 db_map (field: "fcNumConfirmacion", pk: true) 
+       	}    
+     
+       	           
+         def toString {
+       		return NumConfirmacion	
+	   }	 				
+}    
+	
+		entity Institucion{
+		scaffold (add: false, edit: true, delete: false, search: Complex )
+       	glossary ( name: "Institución", description: "Catálogo de instituciones")
+       	db_map (table: "T_Institucion")
+       	
+       	 reference Organiza : Evento [0..*] opposite-of Evento.OrganizadoPor{
+       	 glossary (name: "Clave evento", description: "Clave del evento")
+      	 constraints (unique: true, required: true)
+       	 widget ( exposed_filter: true, display_result: false)
+       	 data (domain: "App::name")
+       	 db_map (field: "fkOrganiza", pk: false)
+      	}
+       	
+         field ClaveInstitucion: Integer{
+       	 glossary (name: "Clave Institución", description: "Clave de la Institución")
+      	 constraints (unique: true, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain:  "Lorem::code5")
+       	 db_map (field: "fcClaveInstitucion", pk: true)   	 
+       	} 
+       	     
+         field NombreInstitucion: Text {
+       	 glossary (name: "Nombre Institución", description: "Nombre de la Institución")
+      	 constraints (unique: false, required: true, min_length:10, max_length: 50)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::paragraph")
+       	 db_map (field: "fcNombreInstitucion", pk: false) 
+       	} 
+       	  
+         field Representante: LongText {
+       	 glossary (name: "Representante", description: "Nombre del Representante")
+      	 constraints (unique: false, required: false, min_length: 150, max_length: 200)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::longParagraph")
+       	 db_map (field: "fcRepresentante", pk: false) 
+       	 
+       	}     
+      
+         field PaginaWeb: LongText {
+       	 glossary (name: "Página Web", description: "Dirección de la página Web")
+      	 constraints (unique: false, required: false, min_length: 150, max_length: 200)
+       	 widget ( exposed_filter: true, display_result:true) 
+       	 data (domain: "Lorem::longParagraph")
+       	 db_map (field: "fcPaginaWeb", pk: false) 
+       	}  
+      
+         field Telefono: Text{
+       	 glossary (name: "Telefono", description: "Número telefónico")
+      	 constraints (unique: false, required: false, min_length: 10, max_length: 20)
+       	 widget ( exposed_filter: true, display_result:true)
+       	 data (domain: "Phone::phoneNumber")
+       	 db_map (field: "fcTelefono", pk: false) 
+       	 
+       	}  
+      
+            reference Tipo: TipoEstatus [1..1] {
+       		glossary (name: "Estatus", description: "Tipo de estatus")
+      		constraints (unique: true, required: true)
+       		widget ( exposed_filter: true, display_result: true)
+       		db_map (field: "fkTipo", pk: false)
+       	}  
+           
+        def toString {
+       		return NombreInstitucion
+		
+	   }	
+   	}  	
+		entity Evento {
+		scaffold (add: true, edit: true, delete: false, search: Complex)
+       	glossary (name: "Evento", description: "Control de eventos")
+ 		db_map (table: "T_Evento")
+                  	       	
+       	reference OrganizadoPor: Institucion [1..1] opposite-of Institucion.Organiza {
+     	 glossary (name: "Clave Institución", description: "Clave de la Institución")
+      	 constraints (unique: true, required: true )
+       	 widget ( exposed_filter: false, display_result: true)
+       	 data (domain: "App::name")
+       	 db_map (field: "fkOrganizadoPor", pk: false)   	 
+     	 }   
+     	 
+    	 reference  ImpartidoPor: Profesor [1..1]opposite-of Profesor.Imparte {
+   	   	 glossary (name: "Número empleado", description: "Número de empleado del profesor")
+      	 constraints (unique: true, required: true)
+       	 widget ( exposed_filter: false, display_result: true)
+       	 data (domain: "App::name")
+       	 db_map (field: "fkImpartidoPor", pk: false)
+       	} 
+    
+        reference Inscrito: Registro [0..*]opposite-of Registro.InscritoPor {
+        glossary (name: "Número de confirmación", description: "Número de confirmación del registro")
+      	constraints (unique: true, required: true)
+       	widget ( exposed_filter: false, display_result: true)
+       	data (domain: "Lorem::code5")
+       	db_map (field: "fkInscrito", pk: false)
+       	
+       	}    
+     	      	
+         field Clave: Text {
+       	 glossary (name: "Clave", description: "Clave que identifica al evento")
+      	 constraints (unique: true, required: true, min_length: 10, max_length: 10)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 data (domain: "Lorem::code5")
+       	 db_map (field: "fcClave", pk: true) 
+       	 
+       	} 
+       	  
+         field FechaEvento: Date {
+       	 glossary (name: "Fecha", description: "Fecha del evento")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true)
+       	 db_map (field: "fcFechaEvento", pk: false) 
+       	 
+       	} 
+       	  
+         field Titulo: Text {
+       	 glossary (name: "Título", description: "Título del evento")
+      	 constraints (unique: false, required: true,min_length: 80, max_length: 100)
+       	 widget ( exposed_filter: true, display_result:true)
+       	 data (domain: "Lorem::paragraph")
+       	 db_map (field: "fcTitulo", pk: false) 
+       	 
+       	}     
+      
+         field Duracion: Integer{
+       	 glossary (name: "Duración", description: "Duración del evento")
+      	 constraints (unique: false, required: true)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 //data (domain: "Lorem::code5")
+       	 db_map (field: "fcDuracion", pk: false) 
+       	 
+       	}  
+      
+         field Lugar: LongText {
+       	 glossary (name: "Lugar (liga)", description: "Link evento")
+      	 constraints (unique: false, required: true,min_length: 150, max_length: 200)
+       	 widget ( exposed_filter: false, display_result: true)
+       	 data (domain: "Lorem::longParagraph")
+       	 db_map (field: "fcLugar", pk: false) 
+       	 
+       	}  
+       	
+       	field Cartel: Image {
+       	 glossary (name: "Cartel", description: "Imagen del cartel")
+      	 constraints (unique: false, required: false)
+       	 widget ( exposed_filter: true, display_result: true)
+       	 db_map (field: "fcCartel", pk: false) 
+       	 
+       	 }  
+       	 
+       	reference Tipo: TipoEstatus [1..1] {
+       		glossary (name: "Estatus", description: "Tipo de estatus")
+      		constraints (unique: false, required: true)
+       		widget ( exposed_filter: true, display_result: false)
+       		db_map (field: "fkTipo", pk: false)
+       	}    
+       	 
+       
+        def toString {
+      		return Clave
+		
+	   }	       
+	   }
+	   }
+	  
