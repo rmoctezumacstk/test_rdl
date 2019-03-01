@@ -4,7 +4,7 @@ pipeline {
         stage('Test'){
 			agent any
 			steps{
-				bat 'docker rm softtek_plantuml'
+				bat 'docker volume create --name output-rdl'
 			}
         }
 	}
