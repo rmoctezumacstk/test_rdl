@@ -4,7 +4,7 @@ pipeline {
         stage('Test'){
 			agent any
 			steps{
-				bat 'echo %CD%'
+				bat 'docker'
 			}
         }
 	}
