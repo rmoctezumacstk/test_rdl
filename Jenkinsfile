@@ -4,7 +4,7 @@ pipeline {
         stage('Test'){
 			agent any
 			steps{
-				sh 'docker stop softtek_prototipo'
+				bat 'echo %CD%'
 			}
         }
 	}
