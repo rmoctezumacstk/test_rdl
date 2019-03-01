@@ -26,7 +26,7 @@ pipeline {
             steps{
                 bat '''
                     cd C:/Users/raul.moctezuma/Documents/docker_softtek_java8
-                    docker build . -t "softtek:java8"
+                    docker build . -t "softtek:java"
                     docker run --name softtek_rdl -v output-rdl:/rdl/input/src-gen softtek:java8
                 '''
             }
