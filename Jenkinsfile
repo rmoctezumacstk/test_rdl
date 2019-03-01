@@ -4,7 +4,7 @@ pipeline {
         stage('Test'){
 			agent any
 			steps{
-				bat 'docker stop softtek_prototipo'
+				bat 'docker rm softtek_plantuml'
 			}
         }
 	}
