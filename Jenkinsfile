@@ -36,6 +36,7 @@ pipeline {
 			agent any
             steps{
                 powershell '''
+					echo $HOME
                     cd $HOME/Documents/docker_rdl
                     docker build . -t "softtek:rdl-admincontenido"
                     docker run --name rdl_admincontenido -v v-rdl-admincontenido:/rdl/input/src-gen softtek:rdl-admincontenido
