@@ -28,10 +28,12 @@ pipeline {
                     docker volume rm v-rdl-admincontenido | out-null
                     docker volume rm v-screenshots-admincontenido | out-null
                     docker volume rm v-uml-admincontenido | out-null
+					docker volume rm v-pdf-admincontenido | out-null
 					
                     docker volume create --name v-rdl-admincontenido
                     docker volume create --name v-screenshots-admincontenido
                     docker volume create --name v-uml-admincontenido
+					docker volume create --name v-pdf-admincontenido
 				'''
             }
         }
@@ -72,6 +74,16 @@ pipeline {
                     cd C:/Users/raul.moctezuma/Documents/docker-plantuml
                     docker build . -t  "softtek:plantuml-admincontenido"
                     docker run --name plantuml_admincontenido -v v-rdl-admincontenido:/rdl/input/src-gen -v v-uml-admincontenido:/plantuml softtek:plantuml-admincontenido
+                '''
+            }
+        }
+		stage('Create PDF with Latex'){
+			agent any
+            steps{
+                powershell '''
+                    cd C:/Users/raul.moctezuma/Documents/docker-latex
+                    docker build . -t  "softtek:latex-admincontenido"
+                    docker run --name latex_admincontenido -v v-rdl-admincontenido:/rdl/input/src-gen -v v-screenshots-admincontenido:/cypress/screenshots -v v-uml-admincontenido:/plantuml -v v-pdf-admincontenido:/pdf softtek:latex
                 '''
             }
         }
