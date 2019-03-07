@@ -26,6 +26,7 @@ pipeline {
 					docker rmi softtek:screenshots-admincontenido | out-null
 					docker rmi softtek:plantuml-admincontenido | out-null
 					docker rmi softtek:latex-admincontenido | out-null
+					docker rmi softtek:pdf-admincontenido | out-null
 					
                     docker volume rm v-rdl-admincontenido | out-null
                     docker volume rm v-screenshots-admincontenido | out-null
@@ -86,6 +87,17 @@ pipeline {
                     cd C:/Users/raul.moctezuma/Documents/docker_latex
                     docker build . -t  "softtek:latex-admincontenido"
                     docker run --name latex_admincontenido -v v-rdl-admincontenido:/rdl/input/src-gen -v v-screenshots-admincontenido:/cypress/screenshots -v v-uml-admincontenido:/plantuml -v v-pdf-admincontenido:/pdf softtek:latex-admincontenido
+                '''
+            }
+        }
+		stage('Publish PDF'){
+			agent any
+            steps{
+                powershell '''
+					docker cp latex_admincontenido:/pdf/functional-spec.pdf C:/Users/raul.moctezuma/Documents/docker_pdf
+                    cd C:/Users/raul.moctezuma/Documents/docker_pdf
+                    docker build . -t softtek:pdf-admincontenido
+                    docker run -d -p 80:4200 softtek:pdf-admincontenido
                 '''
             }
         }
