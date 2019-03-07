@@ -19,11 +19,13 @@ pipeline {
                     docker rm prototipo_admincontenido | out-null
                     docker rm screenshots_admincontenido | out-null
                     docker rm plantuml_admincontenido | out-null
+					docker rm latex_admincontenido | out-null
 					
 					docker rmi softtek:rdl-admincontenido | out-null
 					docker rmi softtek:riot-admincontenido | out-null
 					docker rmi softtek:screenshots-admincontenido | out-null
 					docker rmi softtek:plantuml-admincontenido | out-null
+					docker rmi softtek:latex-admincontenido | out-null
 					
                     docker volume rm v-rdl-admincontenido | out-null
                     docker volume rm v-screenshots-admincontenido | out-null
@@ -83,7 +85,7 @@ pipeline {
                 powershell '''
                     cd C:/Users/raul.moctezuma/Documents/docker-latex
                     docker build . -t  "softtek:latex-admincontenido"
-                    docker run --name latex_admincontenido -v v-rdl-admincontenido:/rdl/input/src-gen -v v-screenshots-admincontenido:/cypress/screenshots -v v-uml-admincontenido:/plantuml -v v-pdf-admincontenido:/pdf softtek:latex
+                    docker run --name latex_admincontenido -v v-rdl-admincontenido:/rdl/input/src-gen -v v-screenshots-admincontenido:/cypress/screenshots -v v-uml-admincontenido:/plantuml -v v-pdf-admincontenido:/pdf softtek:latex-admincontenido
                 '''
             }
         }
