@@ -7,7 +7,8 @@ pipeline {
 		stage('Copy rdl from repository'){
 			agent any
 			steps{
-				powershell 'copy *.rdl $HOME/Documents/docker_rdl'
+				powershell 'echo ${HOME}'
+				powershell 'copy *.rdl C:/Users/raul.moctezuma/Documents/docker_rdl'
 			}
 		}
         stage('Remove volumes, containers and images'){
