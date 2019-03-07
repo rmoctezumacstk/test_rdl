@@ -7,7 +7,6 @@ pipeline {
 		stage('Copy rdl from repository'){
 			agent any
 			steps{
-				powershell 'echo ${HOME}'
 				powershell 'copy *.rdl C:/Users/raul.moctezuma/Documents/docker_rdl'
 			}
 		}
