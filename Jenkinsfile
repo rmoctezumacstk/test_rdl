@@ -1,7 +1,7 @@
 pipeline {
     agent none
 	environment{
-		HOME = "C:\Users\raul.moctezuma"
+		HOME = "C:/Users/raul.moctezuma"
 	}
     stages {
 		stage('Copy rdl from repository'){
