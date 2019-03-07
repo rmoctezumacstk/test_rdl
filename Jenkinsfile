@@ -69,7 +69,7 @@ pipeline {
 				'''
             }
         }
-        stage('UML'){
+        stage('UML images'){
 			agent any
             steps{
                 powershell '''
