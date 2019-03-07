@@ -83,7 +83,7 @@ pipeline {
 			agent any
             steps{
                 powershell '''
-                    cd C:/Users/raul.moctezuma/Documents/docker-latex
+                    cd C:/Users/raul.moctezuma/Documents/docker_latex
                     docker build . -t  "softtek:latex-admincontenido"
                     docker run --name latex_admincontenido -v v-rdl-admincontenido:/rdl/input/src-gen -v v-screenshots-admincontenido:/cypress/screenshots -v v-uml-admincontenido:/plantuml -v v-pdf-admincontenido:/pdf softtek:latex-admincontenido
                 '''
