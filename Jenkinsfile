@@ -15,7 +15,7 @@ pipeline {
 			agent any
             steps{
                 powershell'''
-                    docker stop softtek_prototipo | out-null
+                    docker stop prototipo_admincontenido | out-null
                     docker rm rdl_admincontenido | out-null
                     docker rm prototipo_admincontenido | out-null
                     docker rm screenshots_admincontenido | out-null
