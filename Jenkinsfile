@@ -52,7 +52,11 @@ pipeline {
 			steps{
 				powershell '''
 					cd ./docker_riot
-					ICACLS "./copy.sh" /grant:r "users:(RX)" /C
+					Get-ChildItem ./copy.sh | ForEach-Object {
+					$contents = [IO.File]::ReadAllText($_) -replace "`r`n?", "`n"
+					$utf8 = New-Object System.Text.UTF8Encoding $false
+					[IO.File]::WriteAllText($_, $contents, $utf8)
+					}
 					docker build . -t  "softtek:riot-admincontenido"
 					docker run --name prototipo_admincontenido -p 1337:1337/tcp -v v-rdl-admincontenido:/rdl/input/src-gen softtek:riot-admincontenido
 				'''
