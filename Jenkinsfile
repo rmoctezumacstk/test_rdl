@@ -52,6 +52,7 @@ pipeline {
 			steps{
 				powershell '''
 					cd ./docker_riot
+					ICACLS "./copy.sh" /grant:r "users:(RX)" /C
 					docker build . -t  "softtek:riot-admincontenido"
 					docker run --name prototipo_admincontenido -p 1337:1337/tcp -v v-rdl-admincontenido:/rdl/input/src-gen softtek:riot-admincontenido
 				'''
