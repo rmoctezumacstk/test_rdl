@@ -1,13 +1,10 @@
 pipeline {
 	agent none
-	environment{
-		HOME = "C:/Users/raul.moctezuma"
-	}
 	stages {
 		stage('Copy rdl from repository'){
 			agent any
 			steps{
-				powershell 'copy *.rdl C:/Users/raul.moctezuma/Documents/docker_rdl'
+				powershell 'copy *.rdl ./docker_rdl'
 			}
 		}
 		stage('Remove volumes, containers and images'){
