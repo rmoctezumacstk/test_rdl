@@ -6,4 +6,4 @@ WORKDIR /src
 
 RUN ls -l
 
-CMD ["./copy.sh"]
+CMD ["sh", "copy.sh"]
