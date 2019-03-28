@@ -43,7 +43,29 @@ module AdminContenido {
 		IA: "Información del autor"
 	}
 			
-	
+	entity Calificacion {
+		scaffold ( add: true, edit: true, delete: false, search: Complex)
+		glossary ( name: "Calificación", description: "Catálogo de calificaciones de estudiantes" )
+		db_map ( table: "T_Calificacion")
+		
+		reference Estudiante: Estudiante [1..*] {
+			glossary ( name: "Estudiante", description: "Estudiante con una calificación asignada" )
+			constraints ( required: true, unique: true )
+			widget (display_result: true, exposed_filter: true)
+			db_map ( field: "fcEstudiante", pk: false)
+		}
+		
+		field ValorCalificacion: Decimal {
+			glossary(name: "Calificación", description: "Calificación del estudiante")
+			widget(display_result: true, exposed_filter: false)
+			data (domain: "Lorem::code5")
+			db_map(field: "fcCalificacion", pk: true)
+		}
+		
+		def toString {
+			return ValorCalificacion
+		}
+	}
 	
 	entity Opcion {
 		scaffold (add: true, edit: true, delete: true, search: Complex )
